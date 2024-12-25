@@ -3,6 +3,7 @@ package ir.maktabsharif.usersignuploginapplication.repository.base;
 import ir.maktabsharif.usersignuploginapplication.model.base.BaseEntity;
 
 import java.io.Serializable;
+import java.util.List;
 import java.util.Optional;
 
 public interface BaseRepository<TYPE extends BaseEntity<ID>, ID extends Serializable> {
@@ -10,5 +11,7 @@ public interface BaseRepository<TYPE extends BaseEntity<ID>, ID extends Serializ
     Optional<ID> save(TYPE entity);
 
     Optional<TYPE> findById(ID id);
+
+    List<TYPE> findAll();
 
 }

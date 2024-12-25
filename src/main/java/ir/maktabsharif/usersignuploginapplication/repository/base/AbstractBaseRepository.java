@@ -6,6 +6,7 @@ import ir.maktabsharif.usersignuploginapplication.util.JPAUtil;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import java.io.Serializable;
+import java.util.List;
 import java.util.Optional;
 
 public abstract class AbstractBaseRepository<TYPE extends BaseEntity<ID>, ID extends Serializable> implements BaseRepository<TYPE,ID> {
@@ -31,6 +32,14 @@ private EntityManagerFactory emf= JPAUtil.getEmf();
         } finally {
             entityManager.close();
         }
+    }
+
+    @Override
+    public List<TYPE> findAll() {
+        EntityManager entityManager = emf.createEntityManager();
+        return entityManager
+                .createQuery("from " + getClassType().getSimpleName(), getClassType())
+                .getResultList();
     }
 
 

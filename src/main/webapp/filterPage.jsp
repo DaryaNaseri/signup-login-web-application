@@ -9,8 +9,18 @@
 <html>
 <head>
     <title>Forbidden</title>
+    <link rel="stylesheet" href="./css/styles.css">
 </head>
 <body>
-
+<div class="wrapper">
+    <div class="input-box-button-input">
+        <button style="background-color: firebrick" class="button" onclick="location.href='signup.jsp'">Return</button>
+    </div>
+</div>
+<%--#1abc9c--%>
+<script>
+   const message = '<%= request.getAttribute("errorMessage")%>'
+   alert(message)
+</script>
 </body>
 </html>

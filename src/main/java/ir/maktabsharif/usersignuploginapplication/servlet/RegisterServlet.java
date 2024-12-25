@@ -14,6 +14,7 @@ import javax.validation.Validation;
 import javax.validation.Validator;
 import javax.validation.ValidatorFactory;
 import java.io.IOException;
+import java.util.Optional;
 import java.util.Set;
 
 @WebServlet("/signup")
@@ -23,31 +24,18 @@ public class RegisterServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-
-        String username = req.getParameter("username");
-        String password = req.getParameter("password");
-
-        UserRequestDto userRequestDto = new UserRequestDto(username, password);
-
-        ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
-        Validator validator = factory.getValidator();
-
-        Set<ConstraintViolation<UserRequestDto>> violations = validator.validate(userRequestDto);
-
-        if (violations.isEmpty()) {
-            Boolean save = userService.save(userRequestDto);
-            if (save) {
-                req.setAttribute("message", "User registered successfully!");
-
-                req.getRequestDispatcher("/panel.jsp").forward(req, resp);
-            } else {
-                req.setAttribute("message", "Failed to register user please try again!");
-                req.getRequestDispatcher("/signup.jsp").forward(req, resp);
-            }
-        } else {
-            req.setAttribute("message", "Failed to register user please try again!");
+       UserRequestDto userRequestDto = (UserRequestDto) req.getAttribute("optionalUserRequestDto");
+        Boolean isTrue = userService.save(userRequestDto);
+        if (isTrue) {
+            req.setAttribute("message","signup successfully");
+            req.getRequestDispatcher("/panel.jsp").forward(req, resp);
+        }else {
+            req.setAttribute("message","signup failed");
             req.getRequestDispatcher("/signup.jsp").forward(req, resp);
         }
+
+
+
 
 
     }
