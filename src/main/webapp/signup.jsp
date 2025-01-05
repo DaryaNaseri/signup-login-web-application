@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title> Registration or Sign Up </title>
     <link rel="stylesheet" href="css/styles.css">
+
 </head>
 <body>
 <div class="wrapper">
@@ -20,7 +21,7 @@
             <input type="password" name="repeatPassword" placeholder="Confirm password" required>
         </div>
         <div class="policy">
-            <input type="checkbox">
+            <input type="checkbox" required>
             <h3>I accept all terms & condition</h3>
         </div>
         <div class="input-box button">
@@ -31,6 +32,7 @@
         </div>
     </form>
 </div>
+
 <script>
 const message = '<%= request.getAttribute("message")%>'
 alert(message)

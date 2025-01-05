@@ -1,15 +1,16 @@
 package ir.maktabsharif.usersignuploginapplication.service;
 
-import ir.maktabsharif.usersignuploginapplication.model.dto.UserRequestDto;
+import ir.maktabsharif.usersignuploginapplication.model.dto.UserSignupRequestDto;
 import ir.maktabsharif.usersignuploginapplication.model.User;
 import ir.maktabsharif.usersignuploginapplication.model.dto.UserResponseDto;
 import ir.maktabsharif.usersignuploginapplication.service.base.BaseService;
 
 import java.util.List;
+import java.util.Optional;
 
-public interface UserService extends BaseService<UserRequestDto,User,Long> {
+public interface UserService extends BaseService<UserSignupRequestDto,User,Long> {
 
     List<UserResponseDto> findAllUsers();
 
-    Boolean findByUserName(UserRequestDto userRequestDto);
+    Optional<UserResponseDto> findByUserName(UserSignupRequestDto userSignupRequestDto);
 }

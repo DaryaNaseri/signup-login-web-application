@@ -14,7 +14,7 @@
             <input type="text" name="username" placeholder="Enter your username" required>
         </div>
         <div class="input-box">
-            <input type="password" name="password" placeholder="Create password" required>
+            <input type="password" name="password" placeholder="Enter your password" required>
         </div>
         <div class="input-box button">
             <input type="Submit" value="Login" >

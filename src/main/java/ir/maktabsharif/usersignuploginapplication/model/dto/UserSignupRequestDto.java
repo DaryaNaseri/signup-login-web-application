@@ -1,6 +1,7 @@
 package ir.maktabsharif.usersignuploginapplication.model.dto;
 
 
+import ir.maktabsharif.usersignuploginapplication.model.UserRole;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -13,7 +14,7 @@ import javax.validation.constraints.Size;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class UserRequestDto {
+public class UserSignupRequestDto {
 
     @NotBlank(message = "username is required!")
     @Size(min = 6, max = 15, message = "invalid username!")
@@ -22,4 +23,5 @@ public class UserRequestDto {
     @NotBlank(message = "password is required!")
     @Size(min = 8, message = "invalid password it should be at least eight character!")
     private String password;
+
 }

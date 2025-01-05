@@ -1,6 +1,5 @@
 package ir.maktabsharif.usersignuploginapplication.servlet;
 
-import ir.maktabsharif.usersignuploginapplication.model.dto.UserRequestDto;
 import ir.maktabsharif.usersignuploginapplication.service.UserService;
 import ir.maktabsharif.usersignuploginapplication.service.UserServiceImpl;
 

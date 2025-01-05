@@ -1,46 +1,61 @@
 package ir.maktabsharif.usersignuploginapplication.service;
 
-import ir.maktabsharif.usersignuploginapplication.model.dto.UserRequestDto;
+import ir.maktabsharif.usersignuploginapplication.model.Permission;
+import ir.maktabsharif.usersignuploginapplication.model.UserRole;
+import ir.maktabsharif.usersignuploginapplication.model.dto.UserSignupRequestDto;
 import ir.maktabsharif.usersignuploginapplication.model.User;
 import ir.maktabsharif.usersignuploginapplication.model.dto.UserResponseDto;
-import ir.maktabsharif.usersignuploginapplication.repository.UserRepository;
-import ir.maktabsharif.usersignuploginapplication.repository.UserRepositoryImpl;
-import ir.maktabsharif.usersignuploginapplication.service.base.AbstractBaseService;
+import ir.maktabsharif.usersignuploginapplication.repository.*;
 
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-public class UserServiceImpl extends AbstractBaseService<UserRequestDto,User,Long> implements UserService {
+public class UserServiceImpl implements UserService {
     private UserRepository userRepository =new UserRepositoryImpl();
 
-
     @Override
-    public Boolean save(UserRequestDto entity) {
-        Optional<Long> createdUserId = Optional.empty();
+    public Boolean save(UserSignupRequestDto entity) {
+        Boolean createdUserId = isItUnique(entity);
+        Optional<Long> optionalUser = Optional.empty();
+        Optional<UserRole> optionalUserRole = Optional.empty();
 
+        if (createdUserId) {
+            List<UserRole> userRoles = userRepository.findUserRoleByUserRoleName("USER");
+            for (UserRole userRole : userRoles) {
+                    optionalUserRole = Optional.ofNullable(userRole);
+
+            }
+                User user = new User(entity.getUsername(), entity.getPassword(),optionalUserRole.get());
+                optionalUser = userRepository.save(user);
+        }
+        return optionalUser.isPresent() && optionalUser.get() > 0;
+    }
+
+    private Boolean isItUnique(UserSignupRequestDto entity) {
         if (!this.findAllUsers().isEmpty()) {
             for (UserResponseDto item: this.findAllUsers()){
                 if (item.getUsername().equals(entity.getUsername())){
                     return false;
-                }else {
-                    User user = new User(entity.getUsername(), entity.getPassword());
-                    createdUserId = userRepository.save(user);}
                 }
-        }else {
-            User user = new User(entity.getUsername(), entity.getPassword());
-            createdUserId = userRepository.save(user);
+            }
         }
-
-        return createdUserId.isPresent() && createdUserId.get() > 0;
+        return true;
     }
+
+
 
     @Override
     public User findById(Long id) {
         Optional<User> findById = userRepository.findById(id);
         return findById.orElse(null);
         }
+
+    @Override
+    public List<User> findAll() {
+        return Collections.emptyList();
+    }
 
     @Override
     public List<UserResponseDto> findAllUsers() {
@@ -55,15 +70,15 @@ public class UserServiceImpl extends AbstractBaseService<UserRequestDto,User,Lon
     }
 
     @Override
-    public Boolean findByUserName(UserRequestDto userRequestDto) {
+    public Optional<UserResponseDto> findByUserName(UserSignupRequestDto userSignupRequestDto) {
         for (UserResponseDto item: this.findAllUsers()){
-            if (item.getUsername().equals(userRequestDto.getUsername())){
-                if (item.getPassword().equals(userRequestDto.getPassword())){
-                    return true;
+            if (item.getUsername().equals(userSignupRequestDto.getUsername())){
+                if (item.getPassword().equals(userSignupRequestDto.getPassword())){
+                    return Optional.of(item);
                 }
             }
         }
-        return false;
+        return Optional.empty();
     }
 
 
