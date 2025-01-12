@@ -1,7 +1,5 @@
 package ir.maktabsharif.usersignuploginapplication.servlet.filter;
 
-import ir.maktabsharif.usersignuploginapplication.model.UserRole;
-import ir.maktabsharif.usersignuploginapplication.model.dto.UserLoginRequestDto;
 import ir.maktabsharif.usersignuploginapplication.model.dto.UserSignupRequestDto;
 import ir.maktabsharif.usersignuploginapplication.service.UserService;
 import ir.maktabsharif.usersignuploginapplication.service.UserServiceImpl;
@@ -35,25 +33,31 @@ public class SignupCheckFilter implements Filter {
 
         String username = request.getParameter("username");
         String password = request.getParameter("password");
+        String confirmPassword = request.getParameter("confirmPassword");
 
-        UserSignupRequestDto userSignupRequestDto = new UserSignupRequestDto(username, password);
+        if (password.equals(confirmPassword)) {
 
+            UserSignupRequestDto userSignupRequestDto = new UserSignupRequestDto(username, password);
 
-        ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
-        Validator validator = factory.getValidator();
+            ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
+            Validator validator = factory.getValidator();
+            Set<ConstraintViolation<UserSignupRequestDto>> violations = validator.validate(userSignupRequestDto);
 
-        Set<ConstraintViolation<UserSignupRequestDto>> violations = validator.validate(userSignupRequestDto);
-
-        if (violations.isEmpty()) {
-            request.setAttribute("optionalUserRequestDto", userSignupRequestDto);
-            filterChain.doFilter(request, response);
-        } else {
-            for (ConstraintViolation<UserSignupRequestDto> violation : violations) {
-                request.setAttribute("errorMessage", violation.getMessage());
-                request.getRequestDispatcher("/filterPage.jsp").forward(request, response);
-
+            if (violations.isEmpty()) {
+                filterChain.doFilter(request, response);
+            } else {
+                for (ConstraintViolation<UserSignupRequestDto> violation : violations) {
+                    request.setAttribute("errorMessage", violation.getMessage());
+                    request.getRequestDispatcher("/filterPage.jsp").forward(request, response);
+                }
             }
+
+        }else {
+            request.setAttribute("errorMessage", "Passwords do not match try again!");
+            request.getRequestDispatcher("/signup.jsp").forward(request, response);
         }
+
+
     }
 
 

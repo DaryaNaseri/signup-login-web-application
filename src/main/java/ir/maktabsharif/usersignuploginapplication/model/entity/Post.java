@@ -1,4 +1,4 @@
-package ir.maktabsharif.usersignuploginapplication.model;
+package ir.maktabsharif.usersignuploginapplication.model.entity;
 
 import ir.maktabsharif.usersignuploginapplication.model.base.BaseEntity;
 import lombok.*;

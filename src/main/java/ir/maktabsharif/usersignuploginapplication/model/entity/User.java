@@ -1,13 +1,10 @@
-package ir.maktabsharif.usersignuploginapplication.model;
+package ir.maktabsharif.usersignuploginapplication.model.entity;
 
 import ir.maktabsharif.usersignuploginapplication.model.base.BaseEntity;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.Size;
-import java.util.ArrayList;
 import java.util.List;
 
 @EqualsAndHashCode(callSuper = true)
@@ -39,14 +36,4 @@ public class User extends BaseEntity<Long> {
     private List<Post> posts;
 
 
-    public User( String username, String password) {
-        this.username = username;
-        this.password = password;
-    }
-
-    public User( String username,  String password, UserRole userRole) {
-        this.username = username;
-        this.password = password;
-        this.userRole = userRole;
-    }
 }

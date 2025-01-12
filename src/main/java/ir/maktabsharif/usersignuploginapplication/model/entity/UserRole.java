@@ -1,4 +1,4 @@
-package ir.maktabsharif.usersignuploginapplication.model;
+package ir.maktabsharif.usersignuploginapplication.model.entity;
 
 import ir.maktabsharif.usersignuploginapplication.model.base.BaseEntity;
 import lombok.*;
@@ -26,11 +26,4 @@ public class UserRole extends BaseEntity<Long> {
     private List<Permission> permissions;
 
 
-    public UserRole(String roleName) {
-        this.roleName = roleName;
-    }
-
-    public static Class<UserRole> getClazz() {
-        return UserRole.class;
-    }
 }

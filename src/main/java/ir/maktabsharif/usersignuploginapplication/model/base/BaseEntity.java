@@ -1,6 +1,7 @@
 package ir.maktabsharif.usersignuploginapplication.model.base;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
@@ -18,9 +19,11 @@ import java.time.LocalDateTime;
 @SuperBuilder
 @MappedSuperclass
 public class BaseEntity<ID extends Serializable> implements Serializable {
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private ID id;
 
+    @Builder.Default
     private LocalDateTime createdAt = LocalDateTime.now();
 }

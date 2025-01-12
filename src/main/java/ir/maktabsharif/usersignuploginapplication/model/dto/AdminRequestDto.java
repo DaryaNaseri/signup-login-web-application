@@ -1,6 +1,6 @@
 package ir.maktabsharif.usersignuploginapplication.model.dto;
 
-import ir.maktabsharif.usersignuploginapplication.model.UserRole;
+import ir.maktabsharif.usersignuploginapplication.model.entity.UserRole;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

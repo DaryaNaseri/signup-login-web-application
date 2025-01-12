@@ -1,12 +1,14 @@
 package ir.maktabsharif.usersignuploginapplication.repository;
 
-import ir.maktabsharif.usersignuploginapplication.model.User;
-import ir.maktabsharif.usersignuploginapplication.model.UserRole;
+import ir.maktabsharif.usersignuploginapplication.model.entity.User;
+import ir.maktabsharif.usersignuploginapplication.model.entity.UserRole;
+import ir.maktabsharif.usersignuploginapplication.model.queryResult.ExistUserName;
 import ir.maktabsharif.usersignuploginapplication.repository.base.AbstractBaseRepository;
 import ir.maktabsharif.usersignuploginapplication.util.JPAUtil;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
+import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
@@ -17,7 +19,7 @@ public class UserRepositoryImpl extends AbstractBaseRepository<User, Long> imple
 
     private final EntityManagerFactory emf= JPAUtil.getEmf();
 
-    public List<UserRole> findUserRoleByUserRoleName(String roleName) {
+    public UserRole findUserRoleByUserRoleName(String roleName) {
         EntityManager entityManager = emf.createEntityManager();
 
         CriteriaBuilder cb = entityManager.getCriteriaBuilder();
@@ -30,7 +32,21 @@ public class UserRepositoryImpl extends AbstractBaseRepository<User, Long> imple
 
         return entityManager
                 .createQuery(query.select(userRoleRoot).where(cb.and(userRolePredicate)))
-                .getResultList();
+                .getResultList().get(0);
+
+    }
+
+
+    public Boolean userNameExists(String userName) {
+        EntityManager entityManager = emf.createEntityManager();
+        TypedQuery<ExistUserName> query = entityManager.createQuery(
+                "select new ir.maktabsharif.usersignuploginapplication.model.queryResult.ExistUserName ( " +
+                        "case when count (ua)<>0 then true " +
+                        "else false " +
+                        "end " +
+                        ") From User ua where ua.username =: username ", ExistUserName.class);
+        query.setParameter("username", userName);
+        return query.getSingleResult().getIsExist();
 
     }
 }

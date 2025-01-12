@@ -6,14 +6,13 @@ import ir.maktabsharif.usersignuploginapplication.service.UserService;
 import ir.maktabsharif.usersignuploginapplication.service.UserServiceImpl;
 
 import javax.servlet.*;
-import javax.servlet.annotation.WebFilter;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.util.Optional;
 
-@WebFilter("/*")
+//@WebFilter("/*")
 public class AuthFilter implements Filter {
 
     private UserService userService = new UserServiceImpl();
@@ -28,36 +27,32 @@ public class AuthFilter implements Filter {
         HttpServletRequest request = (HttpServletRequest) servletRequest;
         HttpServletResponse response = (HttpServletResponse) servletResponse;
 
-        if (request.getServletPath().equals("/login.jsp") ||
-                request.getServletPath().equals("/signup.jsp")||
-                request.getServletPath().equals("/signup")
-                || request.getServletPath().equals("/filterPage.jsp")
-                || request.getServletPath().equals("/index.jsp")
-        ) {
-            filterChain.doFilter(request, response);
-            return;
-        }
 
         HttpSession session = request.getSession();
 
-        Optional<String> username =  Optional.ofNullable( (String) session.getAttribute("username"));
-        Optional<String> password =  Optional.ofNullable( (String) session.getAttribute("password"));
+        Optional<String> username = Optional.ofNullable((String) session.getAttribute("username"));
+        Optional<String> password = Optional.ofNullable((String) session.getAttribute("password"));
 
 
         if (username.isPresent() && password.isPresent()) {
+
             Optional<UserResponseDto> optionalUserName =
-                    userService.findByUserName(new UserSignupRequestDto(username.get(), password.get()));
+                    userService.findByUserNameAndPassword(new UserSignupRequestDto(username.get(), password.get()));
+
             if (optionalUserName.isPresent()) {
-                UserResponseDto userResponseDto = optionalUserName.get();
-                if (userResponseDto.getUsername().equals(username.get()) && userResponseDto.getPassword().equals(password.get())) {
+                if (optionalUserName.get().getUsername().equals(username.get()) &&
+                        optionalUserName.get().getPassword().equals(password.get())) {
+
                     filterChain.doFilter(request, response);
                     return;
                 }
             }
         }
 
-       response.sendRedirect(request.getContextPath() + "/index.jsp");
-       //request.getRequestDispatcher("/filterPage.jsp").forward(request, response);
+        //filter will work again
+        response.sendRedirect(request.getContextPath() + "/login.jsp");
+        //server side rendering:
+        // request.getRequestDispatcher("/index.jsp").forward(request, response);
 
 
     }

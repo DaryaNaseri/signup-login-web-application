@@ -1,14 +1,11 @@
 package ir.maktabsharif.usersignuploginapplication.model.dto;
 
 
-import ir.maktabsharif.usersignuploginapplication.model.Permission;
+import ir.maktabsharif.usersignuploginapplication.model.entity.UserRole;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.Size;
 
 @Data
 @AllArgsConstructor
@@ -22,6 +19,6 @@ public class UserResponseDto {
 
     private String password;
 
-    private Permission permission;
+    private UserRole userRole;
 
 }

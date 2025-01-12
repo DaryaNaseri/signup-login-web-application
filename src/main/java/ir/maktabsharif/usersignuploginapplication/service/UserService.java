@@ -1,7 +1,7 @@
 package ir.maktabsharif.usersignuploginapplication.service;
 
 import ir.maktabsharif.usersignuploginapplication.model.dto.UserSignupRequestDto;
-import ir.maktabsharif.usersignuploginapplication.model.User;
+import ir.maktabsharif.usersignuploginapplication.model.entity.User;
 import ir.maktabsharif.usersignuploginapplication.model.dto.UserResponseDto;
 import ir.maktabsharif.usersignuploginapplication.service.base.BaseService;
 
@@ -12,5 +12,5 @@ public interface UserService extends BaseService<UserSignupRequestDto,User,Long>
 
     List<UserResponseDto> findAllUsers();
 
-    Optional<UserResponseDto> findByUserName(UserSignupRequestDto userSignupRequestDto);
+    Optional<UserResponseDto> findByUserNameAndPassword(UserSignupRequestDto userSignupRequestDto);
 }

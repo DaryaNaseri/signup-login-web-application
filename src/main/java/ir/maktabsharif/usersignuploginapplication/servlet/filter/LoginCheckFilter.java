@@ -17,6 +17,7 @@ import java.util.Optional;
 @WebFilter("/login")
 public class LoginCheckFilter implements Filter {
     private final UserService userService = new UserServiceImpl();
+
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {
         Filter.super.init(filterConfig);
@@ -28,36 +29,26 @@ public class LoginCheckFilter implements Filter {
         HttpServletResponse response = (HttpServletResponse) servletResponse;
         HttpSession session = request.getSession();
 
-
         String username = request.getParameter("username");
         String password = request.getParameter("password");
 
 
-        if (username.equals("AdminAdmin") && password.equals("AdminAdmin")) {
-            AdminRequestDto adminRequestDto = new AdminRequestDto(username, password);
-            request.setAttribute("user", adminRequestDto);
-            filterChain.doFilter(request, response);
-        }else {
             UserSignupRequestDto userSignupRequestDto =
                     new UserSignupRequestDto(username, password);
 
-            Optional<UserResponseDto> findUser = userService.findByUserName(userSignupRequestDto);
+            Optional<UserResponseDto> findUser = userService.findByUserNameAndPassword(userSignupRequestDto);
 
-            if (findUser.isPresent()) {
-                session.setAttribute("user", findUser.get());
+            if (!findUser.isPresent()) {
+                request.setAttribute("message", "username or password is wrong, please try again");
+                response.sendRedirect(request.getContextPath() + "/login.jsp");
+            } else {
+                request.setAttribute("userResponseDto", findUser.get());
+                session.setAttribute("userResponseDto", findUser.get());
                 filterChain.doFilter(request, response);
             }
-            else {
-request.setAttribute("message", "you don't have any account ,signup");
-                request.getRequestDispatcher("/signup.jsp").forward(request, response);
-}
-        }
-
-
 
 
     }
-
 
 
     @Override

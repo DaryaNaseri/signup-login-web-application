@@ -19,19 +19,21 @@ public class RegisterServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-       UserSignupRequestDto userSignupRequestDto = (UserSignupRequestDto) req.getAttribute("optionalUserRequestDto");
-       HttpSession session = req.getSession();
+
+        String username = req.getParameter("username");
+        String password = req.getParameter("password");
+
+       UserSignupRequestDto userSignupRequestDto =
+               new UserSignupRequestDto(username, password);
+
         Boolean isTrue = userService.save(userSignupRequestDto);
+
         if (isTrue) {
             req.setAttribute("message","signup successfully");
-            session.setAttribute("username", userSignupRequestDto.getUsername());
-            session.setAttribute("password", userSignupRequestDto.getPassword());
-
-
-            resp.sendRedirect(req.getContextPath() + "/panel.jsp");
+            resp.sendRedirect(req.getContextPath() + "/login.jsp");
         }else {
             req.setAttribute("message","signup failed, please try again");
-            req.getRequestDispatcher("/signup.jsp").forward(req, resp);
+            resp.sendRedirect("/signup.jsp");
         }
     }
 

@@ -18,7 +18,7 @@
             <input type="password" name="password" placeholder="Create password" required>
         </div>
         <div class="input-box">
-            <input type="password" name="repeatPassword" placeholder="Confirm password" required>
+            <input type="password" name="confirmPassword" placeholder="Confirm password" required>
         </div>
         <div class="policy">
             <input type="checkbox" required>
