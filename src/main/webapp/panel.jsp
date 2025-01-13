@@ -1,46 +1,46 @@
-<%@ page import="ir.maktabsharif.usersignuploginapplication.model.entity.User" %>
-<%@ page import="ir.maktabsharif.usersignuploginapplication.service.UserService" %>
-<%@ page import="ir.maktabsharif.usersignuploginapplication.model.entity.Permission" %>
-<%@ page import="ir.maktabsharif.usersignuploginapplication.service.UserServiceImpl" %>
-<%@ page import="ir.maktabsharif.usersignuploginapplication.model.dto.UserSignupRequestDto" %>
-<%@ page import="ir.maktabsharif.usersignuploginapplication.model.dto.UserResponseDto" %>
-<%@ page import="java.util.Optional" %><%--
-  Created by IntelliJ IDEA.
-  User: Darya
-  Date: 12/24/2024
-  Time: 9:48 AM
-  To change this template use File | Settings | File Templates.
---%>
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ page import="ir.maktabsharif.usersignuploginapplication.model.dto.ResponseDto" %>
+<!DOCTYPE html>
 <html>
 <head>
-    <title>panel</title>
+    <title>Panel</title>
+    <link rel="stylesheet" href="css/styles.css">
 </head>
 <body>
-<div class="container">
-    <ol>
 
-        <%
-            UserResponseDto userResponseDto = (UserResponseDto) session.getAttribute("userResponseDto");
-            if (userResponseDto != null && "ADMIN".equals(userResponseDto.getUserRole().getRoleName())) {
-        %>
-        <li>Add User</li>
-        <li>Delete User</li>
-        <li>Edit User Info</li>
-        <%
-            }
-        %>
+    <%
+        ResponseDto responseDto = (ResponseDto) session.getAttribute("responseDto");
+    if (responseDto != null && "ADMIN".equals(responseDto.getUserRole().getRoleName())){%>
+    <div class="wrapper">
+        <h2>Welcome to Your Panel</h2>
+
+        <div class="input-box-button-input">
+        <button style="background-color: #1abc9c" class="button" onclick="location.href='addUser.jsp'">addUser</button>
+    </div>
+    <div class="input-box-button-input">
+        <button style="background-color: #1abc9c" class="button" onclick="location.href='editUser.jsp'">editUser</button>
+    </div>
+    <div class="input-box-button-input">
+        <button style="background-color: #1abc9c" class="button" onclick="location.href='deleteUser.jsp'">deleteUser</button>
+    </div>
+    </div>
+    <%}%>
+    <div class="wrapper">
+        <h2>Welcome to Your Panel</h2>
+
+        <div class="input-box-button-input">
+            <button style="background-color: #1abc9c" class="button" onclick="location.href='addPost.jsp'">addPost</button>
+        </div>
+        <div class="input-box-button-input">
+            <button style="background-color: #1abc9c" class="button" onclick="location.href='editPost.jsp'">editPost</button>
+        </div>
+        <div class="input-box-button-input">
+            <button style="background-color: #1abc9c" class="button" onclick="location.href='deletePost.jsp'">deletePost</button>
+        </div>
+        <div class="input-box-button-input">
+            <button style="background-color: #1abc9c" class="button" onclick="location.href='editProfile.jsp'">show Profile</button>
+        </div>
+    </div>
 
 
-        <li>Add Post</li>
-        <li>Delete Post</li>
-        <li>Edit Post</li>
-
-    </ol>
-</div>
-<script>
-const message = '<%= request.getAttribute("message")%>'
-    alert(message)
-</script>
 </body>
 </html>

@@ -1,6 +1,7 @@
 package ir.maktabsharif.usersignuploginapplication.repository.base;
 
 import ir.maktabsharif.usersignuploginapplication.model.base.BaseEntity;
+import ir.maktabsharif.usersignuploginapplication.model.entity.User;
 
 import java.io.Serializable;
 import java.util.List;
@@ -14,4 +15,5 @@ public interface BaseRepository<TYPE extends BaseEntity<ID>, ID extends Serializ
 
     List<TYPE> findAll();
 
+    Optional<TYPE> update(TYPE entity);
 }

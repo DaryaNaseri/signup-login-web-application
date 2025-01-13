@@ -20,6 +20,14 @@ public class User extends BaseEntity<Long> {
 
     private String password;
 
+    private String email;
+
+    private String phone;
+
+    private String fullName;
+
+    private String age;
+
     @ManyToMany
     @JoinTable(
             name = "j_user_permission",

@@ -1,9 +1,10 @@
 package ir.maktabsharif.usersignuploginapplication.service;
 
-import ir.maktabsharif.usersignuploginapplication.model.entity.UserRole;
-import ir.maktabsharif.usersignuploginapplication.model.dto.UserSignupRequestDto;
+import ir.maktabsharif.usersignuploginapplication.model.dto.EditRequestDto;
+import ir.maktabsharif.usersignuploginapplication.model.dto.LoginRequestDto;
+import ir.maktabsharif.usersignuploginapplication.model.dto.ResponseDto;
+import ir.maktabsharif.usersignuploginapplication.model.dto.SignupRequestDto;
 import ir.maktabsharif.usersignuploginapplication.model.entity.User;
-import ir.maktabsharif.usersignuploginapplication.model.dto.UserResponseDto;
 import ir.maktabsharif.usersignuploginapplication.repository.*;
 import ir.maktabsharif.usersignuploginapplication.security.BCryptPasswordEncode;
 
@@ -16,7 +17,7 @@ public class UserServiceImpl implements UserService {
     private UserRepository userRepository = new UserRepositoryImpl();
 
     @Override
-    public Boolean save(UserSignupRequestDto requestDto) {
+    public Boolean save(SignupRequestDto requestDto) {
 
         String hashedPass =
                 BCryptPasswordEncode.encodeBCryptPassword(requestDto.getPassword());
@@ -33,16 +34,16 @@ public class UserServiceImpl implements UserService {
         return false;
     }
 
-    private Boolean isItUnique(UserSignupRequestDto requestDto) {
+    private Boolean isItUnique(SignupRequestDto requestDto) {
         return !userRepository.userNameExists(requestDto.getUsername());
     }
 
 
     @Override
-    public List<UserResponseDto> findAllUsers() {
+    public List<ResponseDto> findAllUsers() {
         List<User> allUsers = userRepository.findAll();
         return allUsers.stream()
-                .map(user -> UserResponseDto.builder()
+                .map(user -> ResponseDto.builder()
                         .id(user.getId())
                         .username(user.getUsername())
                         .password(user.getPassword())
@@ -52,16 +53,37 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Optional<UserResponseDto> findByUserNameAndPassword(UserSignupRequestDto userSignupRequestDto) {
-        for (UserResponseDto item : this.findAllUsers()) {
-            if (item.getUsername().equals(userSignupRequestDto.getUsername())) {
-                if (BCryptPasswordEncode.verifyBCryptPassword(userSignupRequestDto.getPassword(), item.getPassword())) {
+    public Optional<ResponseDto> findByUserNameAndPassword(LoginRequestDto loginRequestDto) {
+        for (ResponseDto item : this.findAllUsers()) {
+            if (item.getUsername().equals(loginRequestDto.getUsername())) {
+                if (BCryptPasswordEncode.verifyBCryptPassword(loginRequestDto.getPassword(), item.getPassword())) {
                     return Optional.of(item);
                 }
             }
         }
         return Optional.empty();
     }
+
+    @Override
+    public Boolean update(EditRequestDto newRequestDto) {
+        User user=User
+                .builder()
+                .id(newRequestDto.getId())
+                .username(newRequestDto.getUsername())
+                .password(newRequestDto.getPassword())
+                .email(newRequestDto.getEmail())
+                .phone(newRequestDto.getPhone())
+                .fullName(newRequestDto.getFullName())
+                .age(newRequestDto.getAge())
+                .userRole(userRepository.findUserRoleByUserRoleName("USER"))
+                .build();
+
+
+        Optional<User> userOpt = userRepository.update(user);
+
+    return userOpt.isPresent();
+}
+
 
 
 

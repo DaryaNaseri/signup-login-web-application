@@ -2,6 +2,7 @@ package ir.maktabsharif.usersignuploginapplication.servlet.filter;
 
 import javax.servlet.*;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -29,7 +30,9 @@ public class WhitelistFilter implements Filter {
             e.fillInStackTrace();
         }
 
+
         HttpServletRequest httpServletRequest = (HttpServletRequest) servletRequest;
+
 
         String servletPath = httpServletRequest.getServletPath();
 
@@ -37,6 +40,8 @@ public class WhitelistFilter implements Filter {
            httpServletRequest.getRequestDispatcher(servletPath)
                    .forward(servletRequest,servletResponse);
        } else {
+           HttpSession session = httpServletRequest.getSession(true);
+           session.setAttribute("requestedPath", servletPath);
            filterChain.doFilter(servletRequest,servletResponse);
        }
 

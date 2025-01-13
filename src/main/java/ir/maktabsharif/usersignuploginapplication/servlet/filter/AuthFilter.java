@@ -1,7 +1,10 @@
 package ir.maktabsharif.usersignuploginapplication.servlet.filter;
 
-import ir.maktabsharif.usersignuploginapplication.model.dto.UserResponseDto;
-import ir.maktabsharif.usersignuploginapplication.model.dto.UserSignupRequestDto;
+import ir.maktabsharif.usersignuploginapplication.excepion.MustLoginException;
+import ir.maktabsharif.usersignuploginapplication.excepion.UsernameOrPasswordIncorrectException;
+import ir.maktabsharif.usersignuploginapplication.model.dto.LoginRequestDto;
+import ir.maktabsharif.usersignuploginapplication.model.dto.ResponseDto;
+import ir.maktabsharif.usersignuploginapplication.security.BCryptPasswordEncode;
 import ir.maktabsharif.usersignuploginapplication.service.UserService;
 import ir.maktabsharif.usersignuploginapplication.service.UserServiceImpl;
 
@@ -12,7 +15,6 @@ import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.util.Optional;
 
-//@WebFilter("/*")
 public class AuthFilter implements Filter {
 
     private UserService userService = new UserServiceImpl();
@@ -24,36 +26,48 @@ public class AuthFilter implements Filter {
 
     @Override
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
-        HttpServletRequest request = (HttpServletRequest) servletRequest;
+
         HttpServletResponse response = (HttpServletResponse) servletResponse;
+        HttpServletRequest request = (HttpServletRequest) servletRequest;
+            HttpSession session = ((HttpServletRequest) servletRequest).getSession(false);
 
 
-        HttpSession session = request.getSession();
+            String username = (String) session.getAttribute("username");
+            String password = (String) session.getAttribute("password");
 
-        Optional<String> username = Optional.ofNullable((String) session.getAttribute("username"));
-        Optional<String> password = Optional.ofNullable((String) session.getAttribute("password"));
+            //String hashedPassword = MD5PasswordEncoder.hashWithMD5(password);
 
 
-        if (username.isPresent() && password.isPresent()) {
+            if (Optional.ofNullable(username).isPresent() && Optional.ofNullable(password).isPresent()) {
 
-            Optional<UserResponseDto> optionalUserName =
-                    userService.findByUserNameAndPassword(new UserSignupRequestDto(username.get(), password.get()));
+                LoginRequestDto loginRequestDto =
+                        LoginRequestDto.builder()
+                                .username(username)
+                                .password(password)
+                                .build();
 
-            if (optionalUserName.isPresent()) {
-                if (optionalUserName.get().getUsername().equals(username.get()) &&
-                        optionalUserName.get().getPassword().equals(password.get())) {
+                Optional<ResponseDto> userOpt =
+                        userService.findByUserNameAndPassword(loginRequestDto);
 
-                    filterChain.doFilter(request, response);
-                    return;
+
+                if (userOpt.isPresent()) {
+                    if (username.equals(userOpt.get().getUsername()) &&
+                            BCryptPasswordEncode.verifyBCryptPassword(password, userOpt.get().getPassword())) {
+                        filterChain.doFilter(servletRequest, servletResponse);
+                    }
+                    else {
+                        servletRequest.setAttribute("message" , "username or password incorrect,try again");
+                        response.sendRedirect(request.getContextPath() + "/login.jsp");
+
+                    }
+                }else {
+                    servletRequest.setAttribute("message" , "username or password incorrect,try again");
+                    response.sendRedirect(request.getContextPath() + "/login.jsp");
+
                 }
             }
-        }
 
-        //filter will work again
-        response.sendRedirect(request.getContextPath() + "/login.jsp");
-        //server side rendering:
-        // request.getRequestDispatcher("/index.jsp").forward(request, response);
-
+            //response.sendRedirect(request.getContextPath() + "/login.jsp");
 
     }
 

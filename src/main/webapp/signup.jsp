@@ -8,6 +8,7 @@
 
 </head>
 <body>
+
 <div class="wrapper">
     <h2>Registration</h2>
     <form action="signup" method="post">
@@ -32,7 +33,6 @@
         </div>
     </form>
 </div>
-
 <script>
 const message = '<%= request.getAttribute("message")%>'
 alert(message)

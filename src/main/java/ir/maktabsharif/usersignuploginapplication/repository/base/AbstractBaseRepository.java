@@ -30,6 +30,15 @@ private EntityManagerFactory emf= JPAUtil.getEmf();
     }
 
     @Override
+    public Optional<TYPE> update(TYPE entity) {
+        EntityManager entityManager = emf.createEntityManager();
+        entityManager.getTransaction().begin();
+        entityManager.merge(entity);
+        entityManager.getTransaction().commit();
+        return Optional.of(entity);
+    }
+
+    @Override
     public Optional<TYPE> findById(ID id) {
         EntityManager entityManager = emf.createEntityManager();
         try {

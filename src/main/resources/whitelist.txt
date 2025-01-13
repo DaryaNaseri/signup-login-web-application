@@ -4,6 +4,7 @@
 /signup.jsp
 /signup
 /filterPage.jsp
+/css/styles.css
 
 
 

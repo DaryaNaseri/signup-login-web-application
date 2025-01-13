@@ -1,22 +1,28 @@
 package ir.maktabsharif.usersignuploginapplication.model.dto;
 
+
 import ir.maktabsharif.usersignuploginapplication.model.entity.UserRole;
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
 @Data
-@AllArgsConstructor
-@NoArgsConstructor
 @Builder
-public class AdminRequestDto {
+public class ResponseDto {
+
+    private Long id;
+
+    private String email;
+
+    private String fullName;
+
+    private String phone;
+
     private String username;
+
     private String password;
+
+    private String age;
+
     private UserRole userRole;
 
-    public AdminRequestDto(String username, String password) {
-        this.username = username;
-        this.password = password;
-    }
 }

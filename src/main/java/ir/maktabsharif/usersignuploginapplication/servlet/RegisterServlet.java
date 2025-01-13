@@ -1,6 +1,6 @@
 package ir.maktabsharif.usersignuploginapplication.servlet;
 
-import ir.maktabsharif.usersignuploginapplication.model.dto.UserSignupRequestDto;
+import ir.maktabsharif.usersignuploginapplication.model.dto.SignupRequestDto;
 import ir.maktabsharif.usersignuploginapplication.service.UserService;
 import ir.maktabsharif.usersignuploginapplication.service.UserServiceImpl;
 
@@ -9,8 +9,12 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
+import javax.validation.ConstraintViolation;
+import javax.validation.Validation;
+import javax.validation.Validator;
+import javax.validation.ValidatorFactory;
 import java.io.IOException;
+import java.util.Set;
 
 @WebServlet("/signup")
 public class RegisterServlet extends HttpServlet {
@@ -23,18 +27,33 @@ public class RegisterServlet extends HttpServlet {
         String username = req.getParameter("username");
         String password = req.getParameter("password");
 
-       UserSignupRequestDto userSignupRequestDto =
-               new UserSignupRequestDto(username, password);
 
-        Boolean isTrue = userService.save(userSignupRequestDto);
+            SignupRequestDto signupRequestDto =
+                    SignupRequestDto.builder().username(username).password(password).build();
 
-        if (isTrue) {
-            req.setAttribute("message","signup successfully");
-            resp.sendRedirect(req.getContextPath() + "/login.jsp");
+            ValidatorFactory validatorFactory = Validation.buildDefaultValidatorFactory();
+        Validator validator = validatorFactory.getValidator();
+        Set<ConstraintViolation<SignupRequestDto>> validate = validator.validate(signupRequestDto);
+        if (!validate.isEmpty()) {
+            StringBuilder errors = new StringBuilder();
+            for (ConstraintViolation<SignupRequestDto> constraintViolation : validate) {
+                errors.append(constraintViolation.getMessage()).append(" \n");
+            }
+            req.setAttribute("message","please enter valid parameters : " + errors);
+            req.getRequestDispatcher("signup.jsp").forward(req, resp);
         }else {
-            req.setAttribute("message","signup failed, please try again");
-            resp.sendRedirect("/signup.jsp");
+            Boolean isTrue = userService.save(signupRequestDto);
+
+            if (isTrue) {
+                req.setAttribute("message", "signup successfully");
+                resp.sendRedirect(req.getContextPath() + "/login.jsp");
+            } else {
+                req.setAttribute("message", "signup failed, please try again");
+                resp.sendRedirect(req.getContextPath() + "/signup.jsp");
+            }
+
         }
+
     }
 
     @Override
