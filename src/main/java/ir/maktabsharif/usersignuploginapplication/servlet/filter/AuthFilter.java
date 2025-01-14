@@ -67,8 +67,6 @@ public class AuthFilter implements Filter {
                 }
             }
 
-            //response.sendRedirect(request.getContextPath() + "/login.jsp");
-
     }
 
     @Override

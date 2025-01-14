@@ -19,20 +19,21 @@
 
 <div class="wrapper">
     <h2>You Can Complete Or Edit Your Profile</h2>
+    <form action="profile" method="post">
+
 
     <div class="profile-container">
         <div class="profile-picture" id="profilePicture">
             <img id="previewImage" src="https://via.placeholder.com/150" alt="profile photo">
             <label for="uploadInput" class="upload-btn">Change Photo</label>
         </div>
-        <input type="file" id="uploadInput" accept="image/*" onchange="updateProfilePicture(event)">
+        <input type="file" id="uploadInput" name="photo" accept="image/*" onchange="updateProfilePicture(event)">
     </div>
 
-    <form action="profile" method="post">
+
 
 
         <div class="input-box">
-            <label class="text" for="username">username: </label>
 
             <input type="text" name="username" id="username" placeholder="Enter your password"
                    value="<%=responseDto.getPassword() != null ? responseDto.getUsername() : ""%>" required>
@@ -72,7 +73,7 @@
             <input type="submit" value="Submit">
         </div>
         <div class="text">
-            <h3>Do You Want To Cancel? <a href="panel.jsp">Cancel</a></h3>
+            <h3>Do You Want To Cancel? <a href="profilePanel.jsp">Cancel</a></h3>
         </div>
     </form>
 </div>

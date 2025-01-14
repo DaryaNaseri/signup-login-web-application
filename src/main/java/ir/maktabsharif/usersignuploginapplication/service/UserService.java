@@ -1,9 +1,6 @@
 package ir.maktabsharif.usersignuploginapplication.service;
 
-import ir.maktabsharif.usersignuploginapplication.model.dto.EditRequestDto;
-import ir.maktabsharif.usersignuploginapplication.model.dto.LoginRequestDto;
-import ir.maktabsharif.usersignuploginapplication.model.dto.ResponseDto;
-import ir.maktabsharif.usersignuploginapplication.model.dto.SignupRequestDto;
+import ir.maktabsharif.usersignuploginapplication.model.dto.*;
 import ir.maktabsharif.usersignuploginapplication.model.entity.User;
 import ir.maktabsharif.usersignuploginapplication.service.base.BaseService;
 
@@ -17,4 +14,8 @@ public interface UserService extends BaseService<SignupRequestDto,User,Long> {
     Optional<ResponseDto> findByUserNameAndPassword(LoginRequestDto loginRequestDto);
 
     Boolean update(EditRequestDto newRequestDto);
+
+    Boolean updateUserOrPass(EditUserPassDto editUserPassDto);
+
+
 }

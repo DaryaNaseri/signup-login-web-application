@@ -28,6 +28,11 @@ public class User extends BaseEntity<Long> {
 
     private String age;
 
+    @Lob
+    @Column(columnDefinition = "Text")
+    private String photoHash;
+
+
     @ManyToMany
     @JoinTable(
             name = "j_user_permission",

@@ -1,9 +1,6 @@
 package ir.maktabsharif.usersignuploginapplication.service;
 
-import ir.maktabsharif.usersignuploginapplication.model.dto.EditRequestDto;
-import ir.maktabsharif.usersignuploginapplication.model.dto.LoginRequestDto;
-import ir.maktabsharif.usersignuploginapplication.model.dto.ResponseDto;
-import ir.maktabsharif.usersignuploginapplication.model.dto.SignupRequestDto;
+import ir.maktabsharif.usersignuploginapplication.model.dto.*;
 import ir.maktabsharif.usersignuploginapplication.model.entity.User;
 import ir.maktabsharif.usersignuploginapplication.repository.*;
 import ir.maktabsharif.usersignuploginapplication.security.BCryptPasswordEncode;
@@ -46,7 +43,12 @@ public class UserServiceImpl implements UserService {
                 .map(user -> ResponseDto.builder()
                         .id(user.getId())
                         .username(user.getUsername())
+                        .email(user.getEmail())
+                        .phone(user.getPhone())
+                        .fullName(user.getFullName())
+                        .age(user.getAge())
                         .password(user.getPassword())
+                        .photoHash(user.getPhotoHash())
                         .userRole(user.getUserRole())
                         .build())
                 .collect(Collectors.toList());
@@ -66,11 +68,10 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public Boolean update(EditRequestDto newRequestDto) {
-        User user=User
+        User user = User
                 .builder()
                 .id(newRequestDto.getId())
-                .username(newRequestDto.getUsername())
-                .password(newRequestDto.getPassword())
+                .photoHash(newRequestDto.getPhotoHash())
                 .email(newRequestDto.getEmail())
                 .phone(newRequestDto.getPhone())
                 .fullName(newRequestDto.getFullName())
@@ -81,10 +82,19 @@ public class UserServiceImpl implements UserService {
 
         Optional<User> userOpt = userRepository.update(user);
 
-    return userOpt.isPresent();
-}
+        return userOpt.isPresent();
+    }
 
-
+    @Override
+    public Boolean updateUserOrPass(EditUserPassDto editUserPassDto) {
+        Optional<User> update = userRepository.update(User
+                .builder()
+                .id(editUserPassDto.getId())
+                .username(editUserPassDto.getUsername())
+                .password(BCryptPasswordEncode.encodeBCryptPassword(editUserPassDto.getPassword())).
+                build());
+        return update.isPresent();
+    }
 
 
     @Override

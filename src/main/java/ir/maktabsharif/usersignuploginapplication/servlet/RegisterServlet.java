@@ -26,34 +26,41 @@ public class RegisterServlet extends HttpServlet {
 
         String username = req.getParameter("username");
         String password = req.getParameter("password");
+        String confirmPassword = req.getParameter("confirmPassword");
+
+if (!password.equals(confirmPassword)) {
+    req.setAttribute("message", "password and confirm password do not match");
+    req.getRequestDispatcher("signup.jsp").forward(req, resp);
+}else {
+
+    SignupRequestDto signupRequestDto =
+            SignupRequestDto.builder().username(username).password(password).build();
 
 
-            SignupRequestDto signupRequestDto =
-                    SignupRequestDto.builder().username(username).password(password).build();
+    ValidatorFactory validatorFactory = Validation.buildDefaultValidatorFactory();
+    Validator validator = validatorFactory.getValidator();
+    Set<ConstraintViolation<SignupRequestDto>> validate = validator.validate(signupRequestDto);
+    if (!validate.isEmpty()) {
+        StringBuilder errors = new StringBuilder();
+        for (ConstraintViolation<SignupRequestDto> constraintViolation : validate) {
+            errors.append(constraintViolation.getMessage()).append(" \n");
+        }
+        req.setAttribute("message", "please enter valid parameters : " + errors);
+        req.getRequestDispatcher("signup.jsp").forward(req, resp);
+    } else {
+        Boolean isTrue = userService.save(signupRequestDto);
 
-            ValidatorFactory validatorFactory = Validation.buildDefaultValidatorFactory();
-        Validator validator = validatorFactory.getValidator();
-        Set<ConstraintViolation<SignupRequestDto>> validate = validator.validate(signupRequestDto);
-        if (!validate.isEmpty()) {
-            StringBuilder errors = new StringBuilder();
-            for (ConstraintViolation<SignupRequestDto> constraintViolation : validate) {
-                errors.append(constraintViolation.getMessage()).append(" \n");
-            }
-            req.setAttribute("message","please enter valid parameters : " + errors);
-            req.getRequestDispatcher("signup.jsp").forward(req, resp);
-        }else {
-            Boolean isTrue = userService.save(signupRequestDto);
-
-            if (isTrue) {
-                req.setAttribute("message", "signup successfully");
-                resp.sendRedirect(req.getContextPath() + "/login.jsp");
-            } else {
-                req.setAttribute("message", "signup failed, please try again");
-                resp.sendRedirect(req.getContextPath() + "/signup.jsp");
-            }
+        if (!isTrue) {
+            req.setAttribute("message", "signup failed, please try again");
+            resp.sendRedirect(req.getContextPath() + "/signup.jsp");
+        } else {
+            req.setAttribute("message", "signup successfully");
+            resp.sendRedirect(req.getContextPath() + "/login.jsp");
 
         }
 
+    }
+}
     }
 
     @Override

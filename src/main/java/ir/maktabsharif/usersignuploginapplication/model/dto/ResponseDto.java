@@ -23,6 +23,8 @@ public class ResponseDto {
 
     private String age;
 
+    private String photoHash;
+
     private UserRole userRole;
 
 }

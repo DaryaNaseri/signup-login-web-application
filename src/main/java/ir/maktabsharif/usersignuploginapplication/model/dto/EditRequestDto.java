@@ -13,11 +13,8 @@ public class EditRequestDto {
 
     private Long id;
 
-    //todo:check space
-    @Size(min = 5, max = 10 , message = "username must be between five to ten characters")
     private String username;
 
-    @Size(min = 8 ,message = "password must have at least eight characters")
     private String password;
 
     @Email(message = "enter email in this format: example@gmail.com ")
@@ -31,5 +28,7 @@ public class EditRequestDto {
 
     @NotBlank
     private String age;
+
+    private String photoHash;
 
 }

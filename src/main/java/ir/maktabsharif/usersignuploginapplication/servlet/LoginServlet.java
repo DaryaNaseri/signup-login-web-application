@@ -32,7 +32,8 @@ private UserService userService = new UserServiceImpl();
                             .password(password)
                             .build();
 
-            Optional<ResponseDto> userOpt = userService.findByUserNameAndPassword(loginRequestDto);
+            Optional<ResponseDto> userOpt =
+                    userService.findByUserNameAndPassword(loginRequestDto);
 
 
             if (userOpt.isPresent()){
@@ -45,7 +46,7 @@ private UserService userService = new UserServiceImpl();
                 if (requestedServletPath != null) {
                     resp.sendRedirect(req.getContextPath() + requestedServletPath);
                 } else {
-                    resp.sendRedirect(req.getContextPath() + "/panel.jsp");
+                    resp.sendRedirect(req.getContextPath() + "/dashboard.jsp");
                 }
             } else {
                 req.setAttribute("message","Username or Password is incorrect, please try again");
