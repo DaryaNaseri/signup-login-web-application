@@ -9,6 +9,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import javax.validation.ConstraintViolation;
 import javax.validation.Validation;
 import javax.validation.Validator;
@@ -23,13 +24,13 @@ public class RegisterServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-
+        HttpSession session = req.getSession();
         String username = req.getParameter("username");
         String password = req.getParameter("password");
         String confirmPassword = req.getParameter("confirmPassword");
 
 if (!password.equals(confirmPassword)) {
-    req.setAttribute("message", "password and confirm password do not match");
+    session.setAttribute("message", "password and confirm password do not match");
     req.getRequestDispatcher("signup.jsp").forward(req, resp);
 }else {
 
@@ -45,16 +46,16 @@ if (!password.equals(confirmPassword)) {
         for (ConstraintViolation<SignupRequestDto> constraintViolation : validate) {
             errors.append(constraintViolation.getMessage()).append(" \n");
         }
-        req.setAttribute("message", "please enter valid parameters : " + errors);
+        session.setAttribute("message", "please enter valid parameters : " + errors);
         req.getRequestDispatcher("signup.jsp").forward(req, resp);
     } else {
         Boolean isTrue = userService.save(signupRequestDto);
 
         if (!isTrue) {
-            req.setAttribute("message", "signup failed, please try again");
+            session.setAttribute("message", "signup failed, please try again");
             resp.sendRedirect(req.getContextPath() + "/signup.jsp");
         } else {
-            req.setAttribute("message", "signup successfully");
+            session.setAttribute("message", "signup successfully");
             resp.sendRedirect(req.getContextPath() + "/login.jsp");
 
         }

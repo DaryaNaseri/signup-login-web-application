@@ -1,10 +1,14 @@
+<%@ page import="ir.maktabsharif.usersignuploginapplication.repository.UserRolePermissionRepository" %>
 <!DOCTYPE html>
 <html>
 <head>
-    <title>JSP - Hello World</title>
+    <title>Home page</title>
     <link rel="stylesheet" href="css/styles.css">
 </head>
 <body>
+<% //for create permission and user-role
+    UserRolePermissionRepository.createUserRoleAndPermission();%>
+
 <div class="wrapper">
     <h2>Welcome to Our Website</h2>
     <div class="input-box-button-input">

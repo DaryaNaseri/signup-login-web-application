@@ -87,6 +87,7 @@ form .input-box label{
     color: #333;
     border:0;
     transition: all 0.3s ease;
+    border-radius: 10px;
 }
 
 
@@ -166,13 +167,16 @@ form .text h3 a:hover{
 .upload-btn {
     position: absolute;
     bottom: 10px;
-    background-color: rgba(0, 0, 0, 0.5);
-    color: white;
+    background-color: #1abc9c;
+    color: black;
     font-size: 12px;
     padding: 5px 10px;
     border-radius: 10px;
     cursor: pointer;
-    display: none;
+    /*display: none*/
+    /*you add this down codes*/
+    display: flex;
+    justify-content: center;
 }
 .profile-picture:hover .upload-btn {
     display: block;

@@ -22,6 +22,7 @@ private UserService userService = new UserServiceImpl();
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String username = req.getParameter("username");
         String password = req.getParameter("password");
+        HttpSession session = req.getSession(true);
 
 
         if (Optional.ofNullable(username).isPresent() && Optional.ofNullable(password).isPresent()){
@@ -37,10 +38,11 @@ private UserService userService = new UserServiceImpl();
 
 
             if (userOpt.isPresent()){
-                HttpSession session = req.getSession(true);
                 session.setAttribute("username",username);
                 session.setAttribute("password",password);
                 session.setAttribute("responseDto",userOpt.get());
+                session.setAttribute("message","login success");
+
 
                 String requestedServletPath = (String) session.getAttribute("requestedPath");
                 if (requestedServletPath != null) {
@@ -49,17 +51,15 @@ private UserService userService = new UserServiceImpl();
                     resp.sendRedirect(req.getContextPath() + "/dashboard.jsp");
                 }
             } else {
-                req.setAttribute("message","Username or Password is incorrect, please try again");
+                session.setAttribute("message","Username or Password is incorrect, please try again");
                 req.getRequestDispatcher("login.jsp").forward(req,resp);
             }
         } else {
-            req.setAttribute("message","Username or Password is incorrect");
+            session.setAttribute("message","Username or Password is incorrect");
             //resp.sendRedirect("login.jsp?error=Username or Password is incorrect");
             req.getRequestDispatcher("login.jsp").forward(req,resp);
         }
 
     }
-
-
 
 }

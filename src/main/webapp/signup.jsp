@@ -34,7 +34,7 @@
     </form>
 </div>
 <script>
-const message = '<%= request.getAttribute("message")%>'
+const message = '<%= session.getAttribute("message")%>'
 alert(message)
 </script>
 </body>

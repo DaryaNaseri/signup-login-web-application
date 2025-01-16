@@ -7,14 +7,17 @@ import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
+
 @Data
 @Builder
 public class EditRequestDto {
 
     private Long id;
 
+    @Size(min = 5, message = "username must be between five to ten characters")
     private String username;
 
+    @Size(min = 8, message = "password must have at least eight characters")
     private String password;
 
     @Email(message = "enter email in this format: example@gmail.com ")

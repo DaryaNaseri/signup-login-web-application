@@ -13,9 +13,9 @@ public interface UserService extends BaseService<SignupRequestDto,User,Long> {
 
     Optional<ResponseDto> findByUserNameAndPassword(LoginRequestDto loginRequestDto);
 
-    Boolean update(EditRequestDto newRequestDto);
+    Optional<ResponseDto> update(EditRequestDto newRequestDto);
 
-    Boolean updateUserOrPass(EditUserPassDto editUserPassDto);
+    Optional<ResponseDto> updateUserOrPass(EditRequestDto editUserPassDto);
 
 
 }

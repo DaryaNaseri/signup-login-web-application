@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Responsive Login Form HTML CSS | CodingNepal</title>
+    <title>Login</title>
     <link rel="stylesheet" href="css/styles.css" />
 </head>
 <body>
@@ -26,7 +26,7 @@
     </form>
 </div>
 <script>
-const message = '<%= request.getAttribute("message")%>'
+const message = '<%= session.getAttribute("message")%>'
 alert(message)
 </script>
 </body>

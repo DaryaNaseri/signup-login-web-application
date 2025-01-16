@@ -1,11 +1,12 @@
 <%@ page import="ir.maktabsharif.usersignuploginapplication.model.dto.ResponseDto" %>
 <%@ page import="ir.maktabsharif.usersignuploginapplication.model.dto.ResponseDto" %>
+<%@ page import="ir.maktabsharif.usersignuploginapplication.security.Base64PhotoEncoder" %>
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Profile </title>
+    <title>Edit Profile</title>
     <link rel="stylesheet" href="css/styles.css">
 
 </head>
@@ -13,35 +14,28 @@
 <%
     ResponseDto responseDto = (ResponseDto) session.getAttribute("responseDto");
     if (responseDto == null) {
-        responseDto = ResponseDto.builder().build(); // Create a new empty object to avoid NullPointerException
+        responseDto = ResponseDto.builder().build();
     }
 %>
 
 <div class="wrapper">
-    <h2>You Can Complete Or Edit Your Profile</h2>
-    <form action="profile" method="post">
+    <h2>Complete Your Personal Info <%=responseDto.getUsername()%>
+    </h2>
 
+    <form action="profile" method="post" enctype="multipart/form-data">
+        <div class="profile-container">
+            <div class="profile-picture" id="profilePicture">
 
-    <div class="profile-container">
-        <div class="profile-picture" id="profilePicture">
-            <img id="previewImage" src="https://via.placeholder.com/150" alt="profile photo">
-            <label for="uploadInput" class="upload-btn">Change Photo</label>
+                <img src="data:image/jpeg;base64,<%=responseDto.getPhotoHash() != null && !responseDto.getPhotoHash().isEmpty()
+           ? responseDto.getPhotoHash(): "https://via.placeholder.com/150"%>" alt="Profile Photo">
+
+                <label for="uploadInput" class="upload-btn">Change Photo</label>
+            </div>
+            <input type="file" id="uploadInput" name="photo" accept="image/*" onchange="updateProfilePicture(event)">
         </div>
-        <input type="file" id="uploadInput" name="photo" accept="image/*" onchange="updateProfilePicture(event)">
-    </div>
 
 
 
-
-        <div class="input-box">
-
-            <input type="text" name="username" id="username" placeholder="Enter your password"
-                   value="<%=responseDto.getPassword() != null ? responseDto.getUsername() : ""%>" required>
-        </div>
-        <div class="input-box">
-            <input type="password" name="password" placeholder="Create password"
-                   value="<%=responseDto.getPassword() != null ? responseDto.getPassword() : ""%>" required>
-        </div>
         <div class="input-box">
             <input type="text" name="fullName" placeholder="Enter your Full Name"
                    value="<%=responseDto.getFullName() != null ? responseDto.getFullName() : ""%>" required>
@@ -58,13 +52,7 @@
             <input type="text" name="age" placeholder="Enter your age"
                    value="<%=responseDto.getAge() != null ? responseDto.getAge() : ""%>" required>
         </div>
-<%--        <div class="input-box">--%>
-<%--            <label class="text" for="gender">gender </label>--%>
-<%--            <select id="gender" name="gender">--%>
-<%--                <option value="FEMALE">female</option>--%>
-<%--                <option value="MALE">male</option>--%>
-<%--            </select>--%>
-<%--        </div>--%>
+
         <div class="policy">
             <input type="checkbox" required>
             <h3>I accept all terms & conditions</h3>
@@ -73,7 +61,11 @@
             <input type="submit" value="Submit">
         </div>
         <div class="text">
-            <h3>Do You Want To Cancel? <a href="profilePanel.jsp">Cancel</a></h3>
+            <h3>Do You Want To Cancel? <a href="dashboard.jsp">Cancel</a></h3>
+        </div>
+        <div class="text">
+            <h3>Do You Want To Change Your Username Or Password? <a href="editUserPass.jsp">Edit Username/Password</a>
+            </h3>
         </div>
     </form>
 </div>
@@ -90,7 +82,10 @@
         }
     }
 </script>
-
+<script>
+    const message = '<%= session.getAttribute("message")%>'
+    alert(message)
+</script>
 
 </body>
 </html>

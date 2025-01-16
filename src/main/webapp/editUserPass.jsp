@@ -47,6 +47,9 @@
         </div>
     </form>
 </div>
-
+<script>
+    const message = '<%= session.getAttribute("message")%>'
+    alert(message)
+</script>
 </body>
 </html>

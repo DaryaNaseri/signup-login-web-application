@@ -67,10 +67,12 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Boolean update(EditRequestDto newRequestDto) {
+    public Optional<ResponseDto> update(EditRequestDto newRequestDto) {
         User user = User
                 .builder()
                 .id(newRequestDto.getId())
+                .username(newRequestDto.getUsername())
+                .password(newRequestDto.getPassword())
                 .photoHash(newRequestDto.getPhotoHash())
                 .email(newRequestDto.getEmail())
                 .phone(newRequestDto.getPhone())
@@ -80,21 +82,49 @@ public class UserServiceImpl implements UserService {
                 .build();
 
 
-        Optional<User> userOpt = userRepository.update(user);
-
-        return userOpt.isPresent();
+        return userRepository.update(user)
+                .map(updatedUser -> ResponseDto.builder()
+                        .id(updatedUser.getId())
+                        .username(updatedUser.getUsername())
+                        .password(updatedUser.getPassword())
+                        .email(updatedUser.getEmail())
+                        .phone(updatedUser.getPhone())
+                        .fullName(updatedUser.getFullName())
+                        .age(updatedUser.getAge())
+                        .photoHash(updatedUser.getPhotoHash())
+                        .userRole(updatedUser.getUserRole())
+                        .build());
     }
 
     @Override
-    public Boolean updateUserOrPass(EditUserPassDto editUserPassDto) {
-        Optional<User> update = userRepository.update(User
+    public Optional<ResponseDto> updateUserOrPass(EditRequestDto editUserPassDto) {
+
+        User user = User
                 .builder()
                 .id(editUserPassDto.getId())
                 .username(editUserPassDto.getUsername())
-                .password(BCryptPasswordEncode.encodeBCryptPassword(editUserPassDto.getPassword())).
-                build());
-        return update.isPresent();
-    }
+                .password(BCryptPasswordEncode.encodeBCryptPassword(editUserPassDto.getPassword()))
+                .email(editUserPassDto.getEmail())
+                .phone(editUserPassDto.getPhone())
+                .fullName(editUserPassDto.getFullName())
+                .age(editUserPassDto.getAge())
+                .userRole(userRepository.findUserRoleByUserRoleName("USER"))
+                .photoHash(editUserPassDto.getPhotoHash())
+                .build();
+
+        return userRepository.update(user)
+                .map(updatedUser -> ResponseDto.builder()
+                        .id(updatedUser.getId())
+                        .username(updatedUser.getUsername())
+                        .password(updatedUser.getPassword())
+                        .email(updatedUser.getEmail())
+                        .phone(updatedUser.getPhone())
+                        .fullName(updatedUser.getFullName())
+                        .age(updatedUser.getAge())
+                        .photoHash(updatedUser.getPhotoHash())
+                        .userRole(updatedUser.getUserRole())
+                        .build());
+           }
 
 
     @Override

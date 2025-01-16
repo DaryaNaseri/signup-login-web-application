@@ -19,7 +19,7 @@
 </div>
 <%--#1abc9c--%>
 <script>
-   const message = '<%= request.getAttribute("errorMessage")%>'
+   const message = '<%= session.getAttribute("message")%>'
    alert(message)
 </script>
 </body>
