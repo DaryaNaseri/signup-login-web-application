@@ -26,14 +26,14 @@
         <div class="profile-container">
             <div class="profile-picture" id="profilePicture">
 
-                <img src="data:image/jpeg;base64,<%=responseDto.getPhotoHash() != null && !responseDto.getPhotoHash().isEmpty()
-           ? responseDto.getPhotoHash(): "https://via.placeholder.com/150"%>" alt="Profile Photo">
+                <img id="previewImage" src="<%= (responseDto.getPhotoHash() != null && !responseDto.getPhotoHash().isEmpty())
+    ? "data:image/jpeg;base64," + responseDto.getPhotoHash()
+    : "https://via.placeholder.com/150" %>" alt="Profile Photo">
 
                 <label for="uploadInput" class="upload-btn">Change Photo</label>
             </div>
             <input type="file" id="uploadInput" name="photo" accept="image/*" onchange="updateProfilePicture(event)">
         </div>
-
 
 
         <div class="input-box">
@@ -75,16 +75,11 @@
         if (file) {
             const reader = new FileReader();
             reader.onload = function (e) {
-                const previewImage = document.getElementById('previewImage');
-                previewImage.src = e.target.result;
+                document.getElementById('previewImage').src = e.target.result;
             };
             reader.readAsDataURL(file);
         }
     }
-</script>
-<script>
-    const message = '<%= session.getAttribute("message")%>'
-    alert(message)
 </script>
 
 </body>

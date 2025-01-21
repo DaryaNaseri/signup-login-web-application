@@ -19,9 +19,19 @@
 
     <dependencies>
         <dependency>
+            <groupId>com.github.javafaker</groupId>
+            <artifactId>javafaker</artifactId>
+            <version>1.0.2</version>
+        </dependency>
+        <dependency>
             <groupId>at.favre.lib</groupId>
             <artifactId>bcrypt</artifactId>
             <version>0.10.2</version>
+        </dependency>
+        <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>jstl</artifactId>
+            <version>1.2</version>
         </dependency>
         <dependency>
             <groupId>org.postgresql</groupId>

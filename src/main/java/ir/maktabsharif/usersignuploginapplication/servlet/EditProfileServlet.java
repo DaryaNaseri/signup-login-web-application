@@ -41,6 +41,7 @@ public class EditProfileServlet extends HttpServlet {
         String fullName = req.getParameter("fullName");
         String age = req.getParameter("age");
 
+
         Optional<String> imageHash = UploadImageUtil.convertImage(req, resp, "photo");
         String photoHash = imageHash.orElse(null);
 
@@ -67,6 +68,8 @@ public class EditProfileServlet extends HttpServlet {
             for (ConstraintViolation<EditRequestDto> constraintViolation : validate) {
                 errors.append(constraintViolation.getMessage()).append(" \n");
             }
+            session.setAttribute("message", errors);
+            req.getRequestDispatcher("editProfile.jsp").forward(req, resp);
         } else {
 
             Optional<ResponseDto> responseDtoAfterUpdate = userService.update(newRequestDto);
@@ -74,13 +77,11 @@ public class EditProfileServlet extends HttpServlet {
             if (responseDtoAfterUpdate.isPresent()) {
                 session.setAttribute("message", "edit was successful");
 
-                //todo : maybe this is wrong
                 //session.setAttribute("responseDto", newRequestDto);
                 session.setAttribute("responseDto", responseDtoAfterUpdate.get());
 
                 resp.sendRedirect(req.getContextPath() + "/profilePanel.jsp");
             } else {
-                //todo: you changed it to session it was req
                 session.setAttribute("message", "please try again");
                 req.getRequestDispatcher("/profilePanel.jsp").forward(req, resp);
             }

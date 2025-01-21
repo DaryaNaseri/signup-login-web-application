@@ -6,8 +6,8 @@
     <link rel="stylesheet" href="css/styles.css">
 </head>
 <body>
-<% //for create permission and user-role
-    UserRolePermissionRepository.createUserRoleAndPermission();%>
+<%--<% //for create permission and user-role--%>
+<%--    UserRolePermissionRepository.createUserRoleAndPermission();%>--%>
 
 <div class="wrapper">
     <h2>Welcome to Our Website</h2>

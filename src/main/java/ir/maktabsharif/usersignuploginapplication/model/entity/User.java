@@ -28,7 +28,7 @@ public class User extends BaseEntity<Long> {
 
     private String age;
 
-    @Lob
+   // @Lob
     @Column(columnDefinition = "Text")
     private String photoHash;
 

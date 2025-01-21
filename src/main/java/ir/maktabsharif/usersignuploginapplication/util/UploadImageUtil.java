@@ -18,6 +18,12 @@ public class UploadImageUtil {
 
         if (filePart != null && filePart.getSize() > 0) {
 
+            if (filePart.getSize() > 1024 * 300) {
+                request.setAttribute("message", "Error, you must upload an image with a file size of 10kb");
+                request.getRequestDispatcher("editProfile.jsp").forward(request, response);
+                return Optional.empty();
+            }
+
             InputStream fileContent = filePart.getInputStream();
 
             byte[] fileBytes = readAllBytesUsingBuffer(fileContent);

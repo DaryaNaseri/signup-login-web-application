@@ -15,7 +15,8 @@ import javax.persistence.*;
 public class Post extends BaseEntity<Long> {
     private String title;
     private String content;
-
+    @Enumerated(EnumType.STRING)
+    private PostStatus postStatus;
     @ManyToOne
     @JoinColumn(name = "fk_user")
     private User user;

@@ -19,7 +19,7 @@ public class UserServiceImpl implements UserService {
         String hashedPass =
                 BCryptPasswordEncode.encodeBCryptPassword(requestDto.getPassword());
 
-        if (this.isItUnique(requestDto)) {
+        if (this.isItUnique(requestDto.getUsername())) {
             Optional<Long> idOfSavedEntity = userRepository.save(
                     User.builder()
                             .username(requestDto.getUsername())
@@ -31,8 +31,8 @@ public class UserServiceImpl implements UserService {
         return false;
     }
 
-    private Boolean isItUnique(SignupRequestDto requestDto) {
-        return !userRepository.userNameExists(requestDto.getUsername());
+    private Boolean isItUnique(String username) {
+        return !userRepository.userNameExists(username);
     }
 
 
@@ -99,32 +99,37 @@ public class UserServiceImpl implements UserService {
     @Override
     public Optional<ResponseDto> updateUserOrPass(EditRequestDto editUserPassDto) {
 
-        User user = User
-                .builder()
-                .id(editUserPassDto.getId())
-                .username(editUserPassDto.getUsername())
-                .password(BCryptPasswordEncode.encodeBCryptPassword(editUserPassDto.getPassword()))
-                .email(editUserPassDto.getEmail())
-                .phone(editUserPassDto.getPhone())
-                .fullName(editUserPassDto.getFullName())
-                .age(editUserPassDto.getAge())
-                .userRole(userRepository.findUserRoleByUserRoleName("USER"))
-                .photoHash(editUserPassDto.getPhotoHash())
-                .build();
+        if (this.isItUnique(editUserPassDto.getUsername())) {
+            User user = User
+                    .builder()
+                    .id(editUserPassDto.getId())
+                    .username(editUserPassDto.getUsername())
+                    .password(BCryptPasswordEncode.encodeBCryptPassword(editUserPassDto.getPassword()))
+                    .email(editUserPassDto.getEmail())
+                    .phone(editUserPassDto.getPhone())
+                    .fullName(editUserPassDto.getFullName())
+                    .age(editUserPassDto.getAge())
+                    .userRole(userRepository.findUserRoleByUserRoleName("USER"))
+                    .photoHash(editUserPassDto.getPhotoHash())
+                    .build();
 
-        return userRepository.update(user)
-                .map(updatedUser -> ResponseDto.builder()
-                        .id(updatedUser.getId())
-                        .username(updatedUser.getUsername())
-                        .password(updatedUser.getPassword())
-                        .email(updatedUser.getEmail())
-                        .phone(updatedUser.getPhone())
-                        .fullName(updatedUser.getFullName())
-                        .age(updatedUser.getAge())
-                        .photoHash(updatedUser.getPhotoHash())
-                        .userRole(updatedUser.getUserRole())
-                        .build());
-           }
+            return userRepository.update(user)
+                    .map(updatedUser -> ResponseDto.builder()
+                            .id(updatedUser.getId())
+                            .username(updatedUser.getUsername())
+                            .password(updatedUser.getPassword())
+                            .email(updatedUser.getEmail())
+                            .phone(updatedUser.getPhone())
+                            .fullName(updatedUser.getFullName())
+                            .age(updatedUser.getAge())
+                            .photoHash(updatedUser.getPhotoHash())
+                            .userRole(updatedUser.getUserRole())
+                            .build());
+
+        }
+
+        return Optional.empty();
+    }
 
 
     @Override
